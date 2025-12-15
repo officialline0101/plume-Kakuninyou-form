@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12月27日予約フォーム</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        /* --- 基本設定（プルメリアゴルフ風デザイン） --- */
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #3e2b20; /* ダークブラウン */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 20px;
+            padding-bottom: 40px;
+            color: #4a3b32;
+        }
+
+        .container {
+            background-color: #fdfdfa; /* 明るいクリーム色 */
+            border-radius: 12px;
+            border: 1px solid #d4af37; /* ゴールド枠 */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 600px;
+            padding: 30px 25px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* --- 見出し --- */
+        h1 {
+            background: linear-gradient(135deg, #c5a059, #f3d34b, #c5a059);
+            color: #3e2b20;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            margin: -30px -25px 30px -25px;
+            font-size: 24px;
+            font-family: 'Noto Serif JP', serif;
+            font-weight: 700;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+        }
+
+        h1::before, h1::after {
+            content: '✿';
+            color: #fff;
+            margin: 0 10px;
+            font-size: 0.8em;
+            vertical-align: middle;
+        }
+
+        /* --- ラベルと必須マーク --- */
+        .label {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            color: #5d4037;
+            border-left: 5px solid #d4af37;
+            padding-left: 10px;
+        }
+
+        .required-badge {
+            background-color: #d32f2f;
+            color: white;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        /* --- 入力フォーム基本 --- */
+        input[type="text"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #fff;
+            font-family: inherit;
+            margin-bottom: 10px;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #d4af37;
+            background-color: #fffff8;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* --- 日時選択用スタイル --- */
+        .datetime-wrapper {
+            margin-bottom: 20px;
+        }
+        
+        .dt-grid {
+            display: flex;
+            gap: 10px;
+        }
+
+        .datetime-input {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            color: #4a3b32;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%235d4037%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 10px auto;
+        }
+        
+        /* 日付は固定なので少し色を変えて「変更不要」感を出す */
+        .datetime-input.fixed-date {
+            background-color: #f0f0f0;
+            color: #3e2b20;
+            pointer-events: none; /* クリック無効化（見た目だけselect） */
+            border-color: #e0e0e0;
+        }
+
+        /* --- 送信ボタン --- */
+        .submit-button {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(to bottom, #2ecc71, #218c54);
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 0 #1e6e42, 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .submit-button:hover {
+            background: linear-gradient(to bottom, #35d679, #27a060);
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #1e6e42, 0 3px 6px rgba(0,0,0,0.2);
+        }
+
+        .submit-button:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        .info-text {
+            font-size: 14px;
+            color: #5d4037;
+            background-color: #f9f2e7;
+            padding: 15px;
+            border-left: 4px solid #d4af37;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 20px 15px;
+            }
+            h1 {
+                font-size: 20px;
+                margin: -20px -15px 25px -15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>12月27日予約フォーム</h1>
+        <div class="info-text">
+            以下の項目にご入力の上、【送信】ボタンを押してください。
+        </div>
+
+        <div class="label">お名前<span class="required-badge">必須</span></div>
+        <input type="text" id="name" placeholder="例：ゴルフ 太郎">
+
+        <div class="label">希望日時（第三希望まで）<span class="required-badge">必須</span></div>
+        
+        <div style="margin-bottom:5px; font-weight:bold; font-size:14px;">第一希望</div>
+        <div class="datetime-wrapper">
+            <input type="hidden" id="date1">
+            <div class="dt-grid">
+                <select id="date1_day" class="datetime-input fixed-date"></select>
+                <select id="date1_time" class="datetime-input"></select>
+            </div>
+        </div>
+
+        <div style="margin-bottom:5px; font-weight:bold; font-size:14px;">第二希望</div>
+        <div class="datetime-wrapper">
+            <input type="hidden" id="date2">
+            <div class="dt-grid">
+                <select id="date2_day" class="datetime-input fixed-date"></select>
+                <select id="date2_time" class="datetime-input"></select>
+            </div>
+        </div>
+
+        <div style="margin-bottom:5px; font-weight:bold; font-size:14px;">第三希望</div>
+        <div class="datetime-wrapper">
+            <input type="hidden" id="date3">
+            <div class="dt-grid">
+                <select id="date3_day" class="datetime-input fixed-date"></select>
+                <select id="date3_time" class="datetime-input"></select>
+            </div>
+        </div>
+
+        <div class="label">悩まれてる内容<span class="required-badge">必須</span></div>
+        <textarea id="worry" placeholder="例：最近スライスが直らなくて困っている。アプローチの距離感が掴めない、など。"></textarea>
+
+        <button class="submit-button" onclick="submitForm()">送信</button>
+    </div>
+
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            liff.init({
+                liffId: '2005254357-zKma9BZk' 
+            }).then(() => {
+                console.log('LIFF初期化成功');
+            }).catch((err) => {
+                console.error('LIFF初期化失敗', err);
+            });
+        });
+
+        const pad = n => String(n).padStart(2, '0');
+
+        // --- 日付固定ロジック (最初から選択済みに変更) ---
+        function buildDateOptions(selectEl) {
+            selectEl.innerHTML = ''; // 既存オプション(プレースホルダー等)をクリア
+            
+            const value = "2025-12-27";
+            const label = "12/27（土）";
+            
+            const opt = document.createElement('option');
+            opt.value = value;
+            opt.textContent = label;
+            opt.selected = true; // ★最初から選択状態にする
+            selectEl.appendChild(opt);
+        }
+
+        // --- 時間生成ロジック (09:00〜18:00) ---
+        function buildTimeOptions(selectEl) {
+            selectEl.innerHTML = '<option value="" disabled selected>時間を選択</option>';
+            for (let h = 9; h <= 18; h++) {
+                for (let m of [0, 30]) {
+                    if(h === 18 && m === 30) continue; 
+                    const val = `${pad(h)}:${pad(m)}`;
+                    const opt = document.createElement('option');
+                    opt.value = val;
+                    opt.textContent = val;
+                    selectEl.appendChild(opt);
+                }
+            }
+        }
+
+        // 隠しフィールド更新
+        function updateHidden(baseId) {
+            const day = document.getElementById(`${baseId}_day`).value;
+            const time = document.getElementById(`${baseId}_time`).value;
+            const hidden = document.getElementById(baseId);
+
+            // 日付と時間が両方揃ったら値をセット
+            if(day && time) {
+                hidden.value = `${day}T${time}`;
+            } else {
+                hidden.value = "";
+            }
+        }
+
+        function initPicker(baseId) {
+            const daySel = document.getElementById(`${baseId}_day`);
+            const timeSel = document.getElementById(`${baseId}_time`);
+            buildDateOptions(daySel);
+            buildTimeOptions(timeSel);
+            
+            // 日付は固定で変更不可だが、念のためイベントは残す
+            daySel.addEventListener('change', () => updateHidden(baseId));
+            
+            // 時間が変わったらhiddenを更新
+            timeSel.addEventListener('change', () => updateHidden(baseId));
+        }
+
+        // 初期化
+        ['date1', 'date2', 'date3'].forEach(id => initPicker(id));
+
+        // メッセージ整形
+        function formatDateForMsg(isoString) {
+            if (!isoString) return ''; 
+            const [dPart, tPart] = isoString.split('T');
+            const [year, month, day] = dPart.split('-');
+            const dateObj = new Date(year, month - 1, day);
+            const wd = ['日', '月', '火', '水', '木', '金', '土'][dateObj.getDay()];
+            return `${month}/${day}(${wd}) ${tPart}`;
+        }
+
+        // 送信処理
+        function submitForm() {
+            const name = document.getElementById('name').value;
+            const date1Val = document.getElementById('date1').value;
+            const date2Val = document.getElementById('date2').value;
+            const date3Val = document.getElementById('date3').value;
+            const worry = document.getElementById('worry').value;
+
+            if (!name) { alert('「お名前」を入力してください。'); return; }
+            // 日付は入っているはずなので、実質時間の選択チェックになる
+            if (!date1Val) { alert('「第一希望日時」の時間を選択してください。'); return; }
+            if (!worry) { alert('「悩まれてる内容」を入力してください。'); return; }
+
+            const d1Str = formatDateForMsg(date1Val);
+            const d2Str = formatDateForMsg(date2Val);
+            const d3Str = formatDateForMsg(date3Val);
+
+            const msg = `【12月27日予約内容】\n` +
+                        `\n[お名前]\n${name}` +
+                        `\n\n[希望日時]\n` +
+                        `① ${d1Str}\n` +
+                        `② ${d2Str || 'なし'}\n` +
+                        `③ ${d3Str || 'なし'}` +
+                        `\n\n[悩まれてる内容]\n${worry}`;
+
+            if (!liff.isInClient()) {
+                alert('LINEアプリ外のため送信できませんが、以下の内容で作成されました:\n\n' + msg);
+            } else {
+                liff.sendMessages([{
+                    type: 'text',
+                    text: msg
+                }]).then(() => {
+                    alert('送信しました。スタッフからの連絡をお待ちください。');
+                    liff.closeWindow();
+                }).catch((err) => {
+                    console.error('送信エラー', err);
+                    alert('送信に失敗しました。');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
